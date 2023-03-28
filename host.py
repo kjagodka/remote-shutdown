@@ -1,6 +1,7 @@
 
 import socket
 import os
+import sys
 import platform
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -24,11 +25,11 @@ while True:
     payload, client_address = sock.recvfrom(1024)
     match payload.decode():
       case "ping":
-        print("pinged")
+        print("pinged", file=sys.stderr)
         sock.sendto("pong".encode(), client_address)
       case "shutdown":
-        print("shutdown")
+        print("shutdown", file=sys.stderr)
         sock.sendto("ack".encode(), client_address)
         shutdown()
       case _:
-        print("unknown paylod:" + payload.decode())
+        print("unknown payload: " + payload.decode(), file=sys.stderr)
