@@ -30,8 +30,7 @@ def shutdown_host():
                 print("Host acknowledged shutdown request")
             else:
                 print("Unknown didn't respond correctly for shutdown request")
-        except:
-            (TimeoutError, ConnectionRefusedError):
+        except (TimeoutError, ConnectionRefusedError):
             print("Host went offline")
 
 
