@@ -1,13 +1,14 @@
 import socket
 
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
-MESSAGE = b"Hello, World!"
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-print("UDP target IP: %s" % UDP_IP)
-print("UDP target port: %s" % UDP_PORT)
-print("message: %s" % MESSAGE)
+server_address = '192.168.1.201'
+server_port = 31338
 
-sock = socket.socket(socket.AF_INET, # Internet
-                     socket.SOCK_DGRAM) # UDP
-sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+client_socket.connect((server_address, server_port))
+
+message = 'Hello World'
+client_socket.send(message.encode())
+response = client_socket.recv(1024).decode()
+print(response)
+print("Test passed" if message == response else "Test failed")
