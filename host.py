@@ -3,6 +3,7 @@ import socket
 import os
 import sys
 import platform
+import time
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -10,8 +11,16 @@ server_address = socket.gethostbyname(socket.gethostname())
 server_port = 31338
 
 server = (server_address, server_port)
-sock.bind(server)
-print("Listening on " + server_address + ":" + str(server_port))
+
+binded = False
+while not binded:
+    try:
+        sock.bind(server)
+        binded = True
+        print("Listening on " + server_address + ":" + str(server_port), file=sys.stderr)
+    except OSError:
+        print("Failed to bind " + server_address + ":" + str(server_port), file=sys.stderr)
+        time.sleep(1)
 
 
 def shutdown():
