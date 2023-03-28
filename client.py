@@ -11,29 +11,25 @@ client_socket.connect((server_address, server_port))
 def host_online():
   client_socket.send("ping".encode())
   try:
-
     if client_socket.recv(1024).decode() == "pong":
-      print("Host online")
-      return True
+      return True #host is online
     else:
-      print("Host responded incorrectly")
-      return False
-  except  TimeoutError:
-      print("host didn't respond")
-      return False
-  except ConnectionRefusedError:
-    print("connection refused")
-    return False
+      return False #host didn't respond correctly
+  except (TimeoutError, ConnectionRefusedError):
+    return False #couldn't connect to host
 
 def shutdown_host():
   if (host_online()):
-    client_socket.send("shutdown".encode())
-    response = client_socket.recv(1024).decode()
-    if response == "ack":
-      print("Host acknowledged shutting down")
-    else:
-      print("Unknown response")
-
+    print("Host is online")
+    try:
+      client_socket.send("shutdown".encode())
+      response = client_socket.recv(1024).decode()
+      if response == "ack":
+        print("Host acknowledged shutdown request")
+      else:
+        print("Unknown didn't respond correctly for shutdown request")
+    except: (TimeoutError, ConnectionRefusedError):
+      print("Host went offline")
 
 shutdown_host()
 
